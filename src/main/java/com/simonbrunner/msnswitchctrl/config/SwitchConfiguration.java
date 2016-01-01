@@ -3,6 +3,7 @@ package com.simonbrunner.msnswitchctrl.config;
 public class SwitchConfiguration {
 
     private String name;
+    private String description;
     private String ipAdress;
     private String user;
     private String password;
@@ -15,6 +16,14 @@ public class SwitchConfiguration {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getIpAdress() {
