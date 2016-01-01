@@ -1,5 +1,5 @@
 # msnswitch-control
-Vaadin-based front-end for the 'MSNswitch' power-switch.
+Vaadin-based front-end for the power-switch produced by MSNswitch.
 
 ### MSNswitch
 
