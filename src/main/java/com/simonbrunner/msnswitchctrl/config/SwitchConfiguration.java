@@ -2,6 +2,13 @@ package com.simonbrunner.msnswitchctrl.config;
 
 public class SwitchConfiguration {
 
+    public static final String PROPERTY_POSTFIX_DESCRIPTION = ".description";
+    public static final String PROPERTY_POSTFIX_IPADDRESS = ".ipaddress";
+    public static final String PROPERTY_POSTFIX_USER = ".user";
+    public static final String PROPERTY_POSTFIX_PASSWORD = ".passwd";
+    public static final String PROPERTY_POSTFIX_PLUG1NAME = ".plug1name";
+    public static final String PROPERTY_POSTFIX_PLUG2NAME = ".plug2name";
+
     private String name;
     private String description;
     private String ipAdress;
