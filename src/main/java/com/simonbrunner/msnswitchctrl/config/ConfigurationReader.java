@@ -4,6 +4,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ConfigurationReader {
 
@@ -16,6 +18,7 @@ public class ConfigurationReader {
     }
 
     private Properties properties;
+    private ApplicationConfiguration appConfig;
 
     private ConfigurationReader() {
         super();
@@ -31,17 +34,16 @@ public class ConfigurationReader {
         return (String) properties.get(key);
     }
 
-    private static void init() {
-        InputStream inputStream = new FileInputStream(APP_CONFIG);
-        properties = new Properties();
+    private void init() {
         try {
+            InputStream inputStream = new FileInputStream(APP_CONFIG);
+            properties = new Properties();
             properties.load(inputStream);
         } catch (IOException e) {
             log.error("Failure while loading application properties", e);
         }
     }
 
-    private static void parseProperties() {
-
+    private void parseProperties() {
     }
 }

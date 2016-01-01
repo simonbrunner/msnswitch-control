@@ -15,9 +15,11 @@
 
 		<vaadin-version>7.6.0</vaadin-version>
 		<junit-version>4.12</junit-version>
+		<slf4j-version>1.7.13</slf4j-version>
 
 		<vaadin-plugin-version>${vaadin-version}</vaadin-plugin-version>
 		<jetty-plugin-version>9.2.3.v20140905</jetty-plugin-version>
+		<surefire-plugin-version>2.19</surefire-plugin-version>
 	</properties>
 
 	<repositories>
@@ -75,8 +77,20 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.junit</groupId>
-			<artifactdId>junit</artifactdId>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>${slf4j-version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
 			<version>${junit-version}</version>
 			<scope>test</scope>
 		</dependency>
@@ -169,6 +183,12 @@
 				<configuration>
 				    <scanIntervalSeconds>2</scanIntervalSeconds>
 				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${surefire-plugin-version}</version>
 			</plugin>
 		</plugins>
 	</build>

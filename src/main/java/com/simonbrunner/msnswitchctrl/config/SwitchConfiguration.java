@@ -1,6 +1,6 @@
 package com.simonbrunner.msnswitchctrl.config;
 
-public class MSNSwitchConfiguration {
+public class SwitchConfiguration {
 
     private String name;
     private String ipAdress;
