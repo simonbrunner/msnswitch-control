@@ -6,6 +6,7 @@ public class ApplicationConfiguration {
 
     public static final String PROPERTY_USER = "application.user";
     public static final String PROPERTY_PASSWD = "application.passwd";
+    public static final String PROPERTY_SWITCHES = "switches";
 
     private String user;
     private String password;
