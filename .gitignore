@@ -8,3 +8,4 @@ dependency-reduced-pom.xml
 buildNumber.properties
 .idea
 *.iml
+src/main/webapp/VAADIN/themes/mytheme/styles.scss.cache
