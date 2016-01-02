@@ -3,6 +3,7 @@ package com.simonbrunner.msnswitchctrl.ui;
 import com.simonbrunner.msnswitchctrl.config.ApplicationConfiguration;
 import com.simonbrunner.msnswitchctrl.config.ConfigurationReader;
 import com.simonbrunner.msnswitchctrl.config.SwitchConfiguration;
+import com.simonbrunner.msnswitchctrl.network.SwitchControl;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.ui.Button;
@@ -54,6 +55,8 @@ public class SwitchView extends VerticalLayout implements View {
         descriptionLabel.setValue(switchConfig.getDescription());
         plug1.setCaption(switchConfig.getPlug1Name());
         plug2.setCaption(switchConfig.getPlug2Name());
+
+        SwitchControl.readStatus(switchConfig);
 
         plug1.addStyleName("friendly");
         plug2.addStyleName("friendly");
