@@ -6,15 +6,16 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-/**
- * Created by simon on 02/01/16.
- */
-public class ButtonsAndLinks extends VerticalLayout implements View {
-    /**
-     *
-     */
-    public ButtonsAndLinks() {
+public class SwitchView extends VerticalLayout implements View {
+
+    private static final Logger log = LoggerFactory.getLogger(SwitchView.class);
+
+    public SwitchView() {
+        log.info("Configuring SwitchView with ID {}", getId());
+
         setMargin(true);
 
         Label h1 = new Label("Buttons");
