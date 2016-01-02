@@ -6,10 +6,10 @@ import com.simonbrunner.msnswitchctrl.config.SwitchConfiguration;
 import com.simonbrunner.msnswitchctrl.network.SwitchControl;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.server.Page;
+import com.vaadin.server.ThemeResource;
+import com.vaadin.shared.Position;
+import com.vaadin.ui.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,10 +56,25 @@ public class SwitchView extends VerticalLayout implements View {
         plug1.setCaption(switchConfig.getPlug1Name());
         plug2.setCaption(switchConfig.getPlug2Name());
 
-        SwitchControl.readStatus(switchConfig);
+        try {
+            SwitchControl.readStatus(switchConfig);
+        } catch (Exception e) {
+            plug1.setEnabled(false);
+            plug2.setEnabled(false);
 
-        plug1.addStyleName("friendly");
-        plug2.addStyleName("friendly");
+            addErrorMessage(switchConfig);
+        }
+
+        // plug2.addStyleName("friendly");
         // button.addStyleName("danger");
+    }
+
+    private void addErrorMessage(SwitchConfiguration switchConfig) {
+        Notification notification = new Notification(
+                "Warning",
+                "Unable to connect to " + switchConfig.getIpAdress(),
+                Notification.TYPE_ERROR_MESSAGE);
+        notification.setPosition(Position.TOP_CENTER);
+        notification.show(Page.getCurrent());
     }
 }

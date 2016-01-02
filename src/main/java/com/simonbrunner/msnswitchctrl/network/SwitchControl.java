@@ -39,7 +39,7 @@ public class SwitchControl {
                 System.out.println(line);
             }
         } catch(Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException("Failure while reading Switch status", e);
         }
     }
 
