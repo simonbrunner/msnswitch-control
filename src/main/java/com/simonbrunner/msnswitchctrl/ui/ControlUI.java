@@ -14,16 +14,12 @@ import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 @Theme("mytheme")
 @Widgetset("com.simonbrunner.msnswitchctrl.MyAppWidgetset")
 public class ControlUI extends UI {
 
-    private Navigator navigator;
-    private Map<String, String> menuItems = new LinkedHashMap<>();
     private ApplicationConfiguration appConfig = ConfigurationReader.getInstance().getApplicationConfiguration();
+    private Navigator navigator;
 
     @WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
     @VaadinServletConfiguration(ui = ControlUI.class, productionMode = false)
@@ -41,6 +37,7 @@ public class ControlUI extends UI {
 
         navigator = new Navigator(this, viewDisplay);
         navigator.addView("", LoginView.class);
+        navigator.addView(LoginView.VIEW_NAME, LoginView.class);
         for (SwitchConfiguration switchConfig : appConfig.getSwitchConfigurations()) {
             navigator.addView(switchConfig.getName(), SwitchView.class);
         }
@@ -50,11 +47,14 @@ public class ControlUI extends UI {
 
     private CssLayout buildMenu() {
         CssLayout menuItemsLayout = new CssLayout();
-        menuItems.put("common", "Common UI Elements");
-        menuItems.put("buttons-and-links", "Buttons & Links");
         menuItemsLayout.setPrimaryStyleName("valo-menuitems");
         CssLayout menu = new CssLayout();
         menu.addComponent(menuItemsLayout);
+
+        Button b = new Button(LoginView.VIEW_NAME, (Button.ClickListener) event -> navigator.navigateTo(LoginView.VIEW_NAME));
+        b.setHtmlContentAllowed(true);
+        b.setPrimaryStyleName("valo-menu-item");
+        menuItemsLayout.addComponent(b);
 
         Label label = new Label("MSN Switches", ContentMode.HTML);
         label.setPrimaryStyleName("valo-menu-subtitle");
@@ -62,8 +62,8 @@ public class ControlUI extends UI {
         label.setSizeUndefined();
         menuItemsLayout.addComponent(label);
 
-        for (Map.Entry<String, String> item : menuItems.entrySet()) {
-            final Button b = new Button(item.getValue(), (Button.ClickListener) event -> navigator.navigateTo(item.getKey()));
+        for (SwitchConfiguration switchConfig : appConfig.getSwitchConfigurations()) {
+            b = new Button(switchConfig.getName(), (Button.ClickListener) event -> navigator.navigateTo(switchConfig.getName()));
             b.setHtmlContentAllowed(true);
             b.setPrimaryStyleName("valo-menu-item");
             menuItemsLayout.addComponent(b);

@@ -9,6 +9,8 @@ import com.vaadin.ui.VerticalLayout;
 
 public class LoginView extends VerticalLayout implements View {
 
+    public static final String VIEW_NAME = "User Login";
+
     public LoginView() {
         setMargin(true);
 
@@ -28,5 +30,6 @@ public class LoginView extends VerticalLayout implements View {
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent event) {
+
     }
 }

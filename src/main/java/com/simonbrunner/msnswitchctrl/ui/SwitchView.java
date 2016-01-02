@@ -1,5 +1,8 @@
 package com.simonbrunner.msnswitchctrl.ui;
 
+import com.simonbrunner.msnswitchctrl.config.ApplicationConfiguration;
+import com.simonbrunner.msnswitchctrl.config.ConfigurationReader;
+import com.simonbrunner.msnswitchctrl.config.SwitchConfiguration;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.ui.Button;
@@ -13,43 +16,47 @@ public class SwitchView extends VerticalLayout implements View {
 
     private static final Logger log = LoggerFactory.getLogger(SwitchView.class);
 
-    public SwitchView() {
-        log.info("Configuring SwitchView with ID {}", getId());
+    private ApplicationConfiguration appConfig = ConfigurationReader.getInstance().getApplicationConfiguration();
 
+    private Label titleLabel;
+    private Label descriptionLabel;
+    private Button plug1;
+    private Button plug2;
+
+    public SwitchView() {
         setMargin(true);
 
-        Label h1 = new Label("Buttons");
-        h1.addStyleName("h1");
-        addComponent(h1);
+        titleLabel = new Label();
+        titleLabel.addStyleName("h1");
+        addComponent(titleLabel);
+
+        descriptionLabel = new Label();
+        descriptionLabel.addStyleName("h3");
+        addComponent(descriptionLabel);
 
         HorizontalLayout row = new HorizontalLayout();
         row.addStyleName("wrapping");
         row.setSpacing(true);
         addComponent(row);
 
-        Button button = new Button("Normal");
-        row.addComponent(button);
-
-        button = new Button("Disabled");
-        button.setEnabled(false);
-        row.addComponent(button);
-
-        button = new Button("Primary");
-        button.addStyleName("primary");
-        row.addComponent(button);
-
-        button = new Button("Friendly");
-        button.addStyleName("friendly");
-        row.addComponent(button);
-
-        button = new Button("Danger");
-        button.addStyleName("danger");
-        row.addComponent(button);
+        plug1 = new Button();
+        row.addComponent(plug1);
+        plug2 = new Button();
+        row.addComponent(plug2);
     }
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent event) {
-        // TODO Auto-generated method stub
+        log.info("Entering view with name {}", event.getViewName());
+        SwitchConfiguration switchConfig = appConfig.getSwitchConfiguration(event.getViewName());
 
+        titleLabel.setValue(switchConfig.getName());
+        descriptionLabel.setValue(switchConfig.getDescription());
+        plug1.setCaption(switchConfig.getPlug1Name());
+        plug2.setCaption(switchConfig.getPlug2Name());
+
+        plug1.addStyleName("friendly");
+        plug2.addStyleName("friendly");
+        // button.addStyleName("danger");
     }
 }
