@@ -4,8 +4,11 @@
 // This file prefixes all rules with the theme name to avoid causing conflicts with other themes.
 // The actual styles should be defined in mytheme.scss
 
+@import "../valo/valo";
+
 .mytheme {
   @include addons;
   @include mytheme;
+  @include valo;
 
 }

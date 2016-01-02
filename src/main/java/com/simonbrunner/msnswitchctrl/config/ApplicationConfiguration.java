@@ -36,4 +36,14 @@ public class ApplicationConfiguration {
     public void setSwitchConfigurations(List<SwitchConfiguration> switchConfigurations) {
         this.switchConfigurations = switchConfigurations;
     }
+
+    public SwitchConfiguration getSwitchConfiguration(String name) {
+        SwitchConfiguration retValue = null;
+        for(SwitchConfiguration switchConfig : switchConfigurations) {
+            if (switchConfig.getName().equals(name)) {
+                retValue = switchConfig;
+            }
+        }
+        return retValue;
+    }
 }

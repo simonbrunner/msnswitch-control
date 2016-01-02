@@ -85,7 +85,6 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
 			<version>${slf4j-version}</version>
-			<scope>test</scope>
 		</dependency>
 
 		<dependency>
@@ -182,6 +181,12 @@
 				<version>${jetty-plugin-version}</version>
 				<configuration>
 				    <scanIntervalSeconds>2</scanIntervalSeconds>
+					<systemProperties>
+						<systemProperty>
+							<name>msnswitch-control.configuration.location</name>
+							<value>/Users/simon/.msnswitch-control.properties</value>
+						</systemProperty>
+					</systemProperties>
 				</configuration>
 			</plugin>
 

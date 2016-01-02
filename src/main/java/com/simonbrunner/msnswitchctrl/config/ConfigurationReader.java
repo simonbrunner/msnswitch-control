@@ -43,6 +43,10 @@ public class ConfigurationReader {
     private void init() {
         try {
             String configFileLocation = System.getProperty(SYSPROP_APPCONFIG_LOCATION);
+            if (configFileLocation == null) {
+                log.error("System property {} not set! No configuration file found!", SYSPROP_APPCONFIG_LOCATION);
+            }
+
             InputStream inputStream = new FileInputStream(configFileLocation);
             properties = new Properties();
             properties.load(inputStream);
