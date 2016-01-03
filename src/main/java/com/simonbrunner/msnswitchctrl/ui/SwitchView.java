@@ -4,6 +4,7 @@ import com.simonbrunner.msnswitchctrl.config.ApplicationConfiguration;
 import com.simonbrunner.msnswitchctrl.config.ConfigurationReader;
 import com.simonbrunner.msnswitchctrl.config.SwitchConfiguration;
 import com.simonbrunner.msnswitchctrl.network.SwitchControl;
+import com.simonbrunner.msnswitchctrl.network.SwitchStatus;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.Page;
@@ -57,16 +58,36 @@ public class SwitchView extends VerticalLayout implements View {
         plug2.setCaption(switchConfig.getPlug2Name());
 
         try {
-            SwitchControl.readStatus(switchConfig);
+            SwitchControl switchControl = new SwitchControl();
+            SwitchStatus switchStatus = switchControl.readStatus(switchConfig);
+
+            if (switchStatus.getPlug1()) {
+                plug1.addStyleName("friendly");
+            } else {
+                plug1.addStyleName("danger");
+            }
+
+            if (switchStatus.getPlug2()) {
+                plug2.addStyleName("friendly");
+            } else {
+                plug2.addStyleName("danger");
+            }
+
+            // Enable Switches
+            plug2.setEnabled(true);
+            plug1.setEnabled(true);
+
         } catch (Exception e) {
+            log.error("Unable to read Switch status {}", e);
+
             plug1.setEnabled(false);
             plug2.setEnabled(false);
 
+            plug1.addStyleName("primary");
+            plug2.addStyleName("primary");
+
             addErrorMessage(switchConfig);
         }
-
-        // plug2.addStyleName("friendly");
-        // button.addStyleName("danger");
     }
 
     private void addErrorMessage(SwitchConfiguration switchConfig) {

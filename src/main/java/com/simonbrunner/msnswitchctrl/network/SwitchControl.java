@@ -4,43 +4,41 @@ import com.simonbrunner.msnswitchctrl.config.SwitchConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Base64;
-
 public class SwitchControl {
 
     private static final Logger log = LoggerFactory.getLogger(SwitchControl.class);
 
-    private SwitchControl() {
+    NetworkRequestInvoker networkRequestInvoker;
+
+    public SwitchControl() {
         super();
+
+        networkRequestInvoker = new NetworkRequestInvoker();
     }
 
-    public static void readStatus(SwitchConfiguration switchConfiguration) {
+    public SwitchStatus readStatus(SwitchConfiguration switchConfiguration) {
+        final String prefix = "<outlet_status>";
+        final String postfix = "</outlet_status>";
+
         log.info("Reading status for Switch {}", switchConfiguration.getName());
+        SwitchStatus switchStatus = new SwitchStatus();
 
-        try {
-            URL url = new URL ("http://" + switchConfiguration.getIpAdress() + "/outlet_status.xml");
-            String credentials = switchConfiguration.getUser() + ":" + switchConfiguration.getPassword();
-            String encoding = Base64.getEncoder().encodeToString(credentials.getBytes("UTF-8"));
+        String response = networkRequestInvoker.invokeRequest(switchConfiguration, NetworkRequestInvoker.RequestType.READ_STATUS);
 
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setConnectTimeout(3000);
-            connection.setRequestMethod("POST");
-            connection.setDoOutput(true);
-            connection.setRequestProperty ("Authorization", "Basic " + encoding);
-            InputStream content = connection.getInputStream();
-            BufferedReader in = new BufferedReader(new InputStreamReader (content));
-            String line;
-            while ((line = in.readLine()) != null) {
-                System.out.println(line);
-            }
-        } catch(Exception e) {
-            throw new RuntimeException("Failure while reading Switch status", e);
+        if (response != null && response.length() > 0) {
+            int prefixPosition = response.indexOf(prefix) + prefix.length();
+            String responseWithoutPrefix = response.substring(prefixPosition);
+            log.info("Substring with status response: {}", responseWithoutPrefix);
+            // now the next 3 characters are in format a,b (where a and b represent the plug status)
+            char plug1 = responseWithoutPrefix.charAt(0);
+            char plug2 = responseWithoutPrefix.charAt(2);
+            log.info("Status Plug 1: {}", plug1);
+            log.info("Status Plug 2: {}", plug2);
+            switchStatus.setPlug1(Boolean.parseBoolean(Character.toString(plug1)));
+            switchStatus.setPlug2(Boolean.parseBoolean(Character.toString(plug2)));
         }
+
+        return switchStatus;
     }
 
 }
