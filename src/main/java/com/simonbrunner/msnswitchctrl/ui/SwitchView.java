@@ -78,7 +78,7 @@ public class SwitchView extends VerticalLayout implements View {
             plug1.setEnabled(true);
 
         } catch (Exception e) {
-            log.error("Unable to read Switch status {}", e);
+            log.error("Unable to read Switch status", e);
 
             plug1.setEnabled(false);
             plug2.setEnabled(false);
