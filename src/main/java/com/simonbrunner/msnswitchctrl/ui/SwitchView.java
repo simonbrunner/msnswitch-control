@@ -82,17 +82,23 @@ public class SwitchView extends VerticalLayout implements View {
             SwitchControl switchControl = new SwitchControl();
             switchStatus = switchControl.readStatus(switchConfig);
 
+            String plug1Style;
             if (switchStatus.getPlug1()) {
-                plug1.addStyleName("friendly");
+                plug1Style = "friendly";
             } else {
-                plug1.addStyleName("danger");
+                plug1Style = "danger";
             }
+            log.info("Setting Plug1 to Style {}", plug1Style);
+            plug1.setStyleName(plug1Style);
 
+            String plug2Style;
             if (switchStatus.getPlug2()) {
-                plug2.addStyleName("friendly");
+                plug2Style = "friendly";
             } else {
-                plug2.addStyleName("danger");
+                plug2Style = "danger";
             }
+            log.info("Setting Plug2 to Style {}", plug2Style);
+            plug2.setStyleName(plug2Style);
 
             // Enable Switches
             plug2.setEnabled(true);
@@ -104,8 +110,8 @@ public class SwitchView extends VerticalLayout implements View {
             plug1.setEnabled(false);
             plug2.setEnabled(false);
 
-            plug1.addStyleName("primary");
-            plug2.addStyleName("primary");
+            plug1.setStyleName("primary");
+            plug2.setStyleName("primary");
 
             addErrorMessage(switchConfig);
         }
