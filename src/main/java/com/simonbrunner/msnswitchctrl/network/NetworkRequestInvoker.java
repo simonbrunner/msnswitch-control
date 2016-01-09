@@ -20,8 +20,7 @@ public class NetworkRequestInvoker {
 
     public enum RequestType {
         READ_STATUS("/outlet_status.xml"),
-        SWITCH_PLUG1("/control.cgi"),
-        SWITCH_PLUG2("/control.cgi");
+        SWITCH_PLUG("/control.cgi");
 
         private String operation;
 
@@ -66,7 +65,7 @@ public class NetworkRequestInvoker {
         return response.toString();
     }
 
-    public String invokeRequest(SwitchConfiguration switchConfiguration, RequestType requestType) {
+    public String invokeRequest(SwitchConfiguration switchConfiguration, RequestType requestType, String urlPostfix) {
         log.info("Reading status for Switch {}", switchConfiguration.getName());
 
         String response;
@@ -77,11 +76,14 @@ public class NetworkRequestInvoker {
             }
             String url = "http://" + switchConfiguration.getIpAdress() + requestType.getOperation();
             String command = "curl -u " + credentials + " " + url;
+            if (urlPostfix != null) {
+                command = command + " " + urlPostfix;
+            }
             log.info("Invoked command {}", command);
 
             NashornScriptEngineFactory factory = new NashornScriptEngineFactory();
             ScriptEngine engine = factory.getScriptEngine(new String[] { "-scripting" });
-            response = (String) engine.eval("$EXEC(\"" + command + "\")");
+            response = (String) engine.eval("$EXEC(\"" + command + "\");");
 
         } catch(Exception e) {
             throw new RuntimeException("Failure while sending request to switch", e);

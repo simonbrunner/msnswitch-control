@@ -39,7 +39,7 @@ public class SwitchControlTest {
         switchConfiguration.setIpAdress("10.0.0.1");
         switchConfiguration.setUser("admin");
         NetworkRequestInvoker networkRequestInvoker = mock(NetworkRequestInvoker.class);
-        when(networkRequestInvoker.invokeRequest(switchConfiguration, NetworkRequestInvoker.RequestType.READ_STATUS)).thenReturn(response);
+        when(networkRequestInvoker.invokeRequest(switchConfiguration, NetworkRequestInvoker.RequestType.READ_STATUS, null)).thenReturn(response);
 
         SwitchControl objectUnderTest = new SwitchControl();
         objectUnderTest.networkRequestInvoker = networkRequestInvoker;

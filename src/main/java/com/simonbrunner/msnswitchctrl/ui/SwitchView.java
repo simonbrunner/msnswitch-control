@@ -3,6 +3,7 @@ package com.simonbrunner.msnswitchctrl.ui;
 import com.simonbrunner.msnswitchctrl.config.ApplicationConfiguration;
 import com.simonbrunner.msnswitchctrl.config.ConfigurationReader;
 import com.simonbrunner.msnswitchctrl.config.SwitchConfiguration;
+import com.simonbrunner.msnswitchctrl.network.PlugEnum;
 import com.simonbrunner.msnswitchctrl.network.SwitchControl;
 import com.simonbrunner.msnswitchctrl.network.SwitchStatus;
 import com.vaadin.navigator.View;
@@ -25,6 +26,9 @@ public class SwitchView extends VerticalLayout implements View {
     private Button plug1;
     private Button plug2;
 
+    private SwitchConfiguration switchConfig;
+    private SwitchStatus switchStatus;
+
     public SwitchView() {
         setMargin(true);
 
@@ -42,24 +46,41 @@ public class SwitchView extends VerticalLayout implements View {
         addComponent(row);
 
         plug1 = new Button();
+        plug1.addClickListener((Button.ClickListener) event -> {
+            SwitchControl switchControl = new SwitchControl();
+            switchStatus = switchControl.changeStatus(switchConfig, switchStatus, PlugEnum.PLUG_1);
+            readSwitchStatus();
+        });
         row.addComponent(plug1);
+
         plug2 = new Button();
+        plug2.addClickListener((Button.ClickListener) event -> {
+            SwitchControl switchControl = new SwitchControl();
+            switchStatus = switchControl.changeStatus(switchConfig, switchStatus, PlugEnum.PLUG_2);
+            readSwitchStatus();
+        });
         row.addComponent(plug2);
     }
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent event) {
         log.info("Entering view with name {}", event.getViewName());
-        SwitchConfiguration switchConfig = appConfig.getSwitchConfiguration(event.getViewName());
+        if (switchConfig == null) {
+            switchConfig = appConfig.getSwitchConfiguration(event.getViewName());
+        }
 
         titleLabel.setValue(switchConfig.getName());
         descriptionLabel.setValue(switchConfig.getDescription());
         plug1.setCaption(switchConfig.getPlug1Name());
         plug2.setCaption(switchConfig.getPlug2Name());
 
+        readSwitchStatus();
+    }
+
+    private void readSwitchStatus() {
         try {
             SwitchControl switchControl = new SwitchControl();
-            SwitchStatus switchStatus = switchControl.readStatus(switchConfig);
+            switchStatus = switchControl.readStatus(switchConfig);
 
             if (switchStatus.getPlug1()) {
                 plug1.addStyleName("friendly");
