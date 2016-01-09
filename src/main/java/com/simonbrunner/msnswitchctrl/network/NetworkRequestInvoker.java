@@ -1,9 +1,12 @@
 package com.simonbrunner.msnswitchctrl.network;
 
 import com.simonbrunner.msnswitchctrl.config.SwitchConfiguration;
+import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -31,7 +34,8 @@ public class NetworkRequestInvoker {
         }
     }
 
-    public String invokeRequest(SwitchConfiguration switchConfiguration, RequestType requestType) {
+    // FIXME: doesn't work (ends in a 401 response code returned by the MSNswitch)
+    public String invokeRequestPureJava(SwitchConfiguration switchConfiguration, RequestType requestType) {
         log.info("Reading status for Switch {}", switchConfiguration.getName());
 
         StringBuilder response = new StringBuilder();
@@ -60,6 +64,31 @@ public class NetworkRequestInvoker {
 
         log.info("Response read from Switch {}: {}", switchConfiguration.getName(), response.toString());
         return response.toString();
+    }
+
+    public String invokeRequest(SwitchConfiguration switchConfiguration, RequestType requestType) {
+        log.info("Reading status for Switch {}", switchConfiguration.getName());
+
+        String response;
+        try {
+            String credentials = switchConfiguration.getUser() + ":";
+            if (switchConfiguration.getPassword() != null && switchConfiguration.getPassword().length() > 0) {
+                credentials = switchConfiguration.getUser() + ":" + switchConfiguration.getPassword();
+            }
+            String url = "http://" + switchConfiguration.getIpAdress() + requestType.getOperation();
+            String command = "curl -u " + credentials + " " + url;
+            log.info("Invoked command {}", command);
+
+            NashornScriptEngineFactory factory = new NashornScriptEngineFactory();
+            ScriptEngine engine = factory.getScriptEngine(new String[] { "-scripting" });
+            response = (String) engine.eval("$EXEC(\"" + command + "\")");
+
+        } catch(Exception e) {
+            throw new RuntimeException("Failure while sending request to switch", e);
+        }
+
+        log.info("Response read from Switch {}: {}", switchConfiguration.getName(), response.toString());
+        return response;
     }
 
 }
